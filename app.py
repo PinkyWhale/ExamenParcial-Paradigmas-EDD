@@ -235,11 +235,12 @@ def signoff():
 
 @app.errorhandler(404)
 def paginanotf(e):
-    return render_template('404.html'), 404
+    return render_template('404.html', username=session.get('usuarioLoggeado')), 404
 
+#se agrego el , username=session.get('usuarioLoggeado') para validar la navbar
 @app.errorhandler(500)
 def servererror(e):
-    return render_template('500.html'), 500
+    return render_template('500.html', username=session.get('usuarioLoggeado')), 500
 
 if __name__ == "__main__":
     manager.run()
