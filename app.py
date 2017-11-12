@@ -254,11 +254,8 @@ def signoff():
 def paginanotf(e):
     return render_template('404.html', username=session.get('usuarioLoggeado')), 404
 
-<<<<<<< HEAD
+
 #Se agrego el , username=session.get('usuarioLoggeado') para validar la navbar.
-=======
-#se agrego el , username=session.get('usuarioLoggeado') para validar la navbar
->>>>>>> 398eec224f7b8142abcbc23ecdd2b7e831b23586
 @app.errorhandler(500)
 def servererror(e):
     return render_template('500.html', username=session.get('usuarioLoggeado')), 500
