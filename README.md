@@ -6,7 +6,8 @@ PharmaDino
 INTRODUCCIÓN:
 -------------
 
-El presente es un sistema destinado a poder visualizar la base de datos de la empresa **“PharmaDino”**. En la cual se podrá realizar consultas como: Buscar Clientes por nombres, Buscar Productos por su Nombre, Buscar la Cantidad de Stock que se compro y Precios por unidad. A su vez, la el acceso a este sistema está limitado a un proceso de registración y loggeo.
+El presente es un sistema destinado a poder visualizar la base de datos de la empresa **“PharmaDino”**. En la cual se podrá realizar consultas como: Buscar Clientes por nombres, Buscar Productos por su nombre, Buscar la Cantidad de Stock que se compro y Precios por unidad. A su vez, la el acceso a este sistema está limitado a un proceso de registración y loggeo.
+
 
 FLUJO DEL PROGRAMA:
 -------------------
