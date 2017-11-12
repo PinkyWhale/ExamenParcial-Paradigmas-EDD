@@ -105,6 +105,10 @@ def consulcliente():
                         if form_nombre.parametro.data.lower() in cliente.lower():
                             info = [ubicacion[0],ubicacion[1],ubicacion[2],ubicacion[3],ubicacion[4]]
                             infos.append(info)
+                    #Este if se adiciono para informar que no se encuentran resultados.
+                    if len(infos) == 0 :
+                        flash('El cliente que busca no se encuentra en nuestra Base de Datos.')
+                        return render_template('cliente.html', form=form_nombre, username=session.get('usuarioLoggeado'))
                     return render_template('tabla.html', form=form_nombre, cabeza=tupla, cuerpo=infos, username=session.get('usuarioLoggeado'))
                 except IndexError:
                     return 'Numero invalido de datos a corroborar.'           
@@ -136,7 +140,11 @@ def consulproducto():
                         # Este Array guarda las infos que coincide el cliente
                         if form_producto.parametro.data.lower() in producto.lower():
                             info = [ubicacion[0],ubicacion[1],ubicacion[2],ubicacion[3],ubicacion[4]]
-                            infos.append(info)
+                            infos.append(info) 
+                    #Este if se adiciono para informar que no se encuentran resultados.
+                    if len(infos) == 0 :
+                        flash('El Producto que busca no se encuentra en nuestra Base de Datos.')
+                        return render_template('producto.html', form=form_producto, username=session.get('usuarioLoggeado'))
                     return render_template('tabla.html', form=form_producto, cabeza=tupla, cuerpo=infos, username=session.get('usuarioLoggeado'))
                 except IndexError:
                     return 'Error al buscar informacion del producto'                           
@@ -170,6 +178,10 @@ def consulcantidad():
                         if form_cantidad.parametro.data == cantidad:
                             info = [ubicacion[0],ubicacion[1],ubicacion[2],ubicacion[3],ubicacion[4]]
                             infos.append(info)                            
+                    #Este if se adiciono para informar que no se encuentran resultados.
+                    if len(infos) == 0 :
+                        flash('La cantidad ingresada  es inexistente en nuestra base de datos.')
+                        return render_template('cantidad.html', form=form_cantidad, username=session.get('usuarioLoggeado'))
                     return render_template('tabla.html', form=form_cantidad, cabeza=tupla, cuerpo=infos, username=session.get('usuarioLoggeado'))
                 except IndexError:
                     return 'Error al encontrar los usuarios y cantidad'                           
@@ -203,6 +215,10 @@ def consulprecio():
                         if form_precio.parametro.data == precio:
                             info = [ubicacion[0],ubicacion[1],ubicacion[2],ubicacion[3],ubicacion[4]]
                             infos.append(info)                           
+                    #Este if se adiciono para informar que no se encuentran resultados.
+                    if len(infos) == 0 :
+                        flash('El Precio que busca no se encuentra en nuestra Base de Datos.')
+                        return render_template('precio.html', form=form_precio, username=session.get('usuarioLoggeado'))
                     return render_template('tabla.html', form=form_precio, cabeza=tupla, cuerpo=infos, username=session.get('usuarioLoggeado'))
                 except IndexError:
                     return 'Error al buscar el usuario y su precio'                           
@@ -233,13 +249,15 @@ def signoff():
     session.pop('usuarioLoggeado', None)
     return redirect('/login')
 
+#Se agrego el , username=session.get('usuarioLoggeado') para validar la navbar.
 @app.errorhandler(404)
 def paginanotf(e):
-    return render_template('404.html'), 404
+    return render_template('404.html', username=session.get('usuarioLoggeado')), 404
 
+#Se agrego el , username=session.get('usuarioLoggeado') para validar la navbar.
 @app.errorhandler(500)
 def servererror(e):
-    return render_template('500.html'), 500
+    return render_template('500.html', username=session.get('usuarioLoggeado')), 500
 
 if __name__ == "__main__":
     manager.run()

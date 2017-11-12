@@ -14,5 +14,19 @@
     </br>
     </br>
     <input type="submit" value="Enviar">
+    </br>
 </form>
+
+{% with messages = get_flashed_messages() %}
+  {% if messages %}
+    <ul class=flashes style="color:red;">
+    {% for message in messages %}
+      <li>{{ message }}</li>
+    {% endfor %}
+    </ul>
+  {% endif %}
+{% endwith %}
+
+
+
 {% endblock %}

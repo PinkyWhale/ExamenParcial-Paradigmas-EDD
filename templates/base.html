@@ -4,12 +4,13 @@
 
 <link rel="shortcut icon" href="{{ url_for('static', filename = 'favicon.png') }}" type="image/x-icon">
 <link rel="icon" href="{{ url_for('static', filename = 'favicon.png') }}" type="image/x-icon">
+<link rel="stylesheet" href="{{ url_for('static', filename = 'css/style.css') }}">
 
 {% endblock %}
 {% block title %}HOME{{ nombre }}{% endblock %}
 {% block navbar %}
 
-<div class="navbar navbar-inverse bg-inverse" role="navigation">
+<div class="navbar navbar-inverse bg-inverse mi-nav" role="navigation">
     <div class="container">
         <div class="navbar-header">
             <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
@@ -25,10 +26,10 @@
         <div class="navbar-collapse collapse">
             <ul class="nav navbar-nav">
                 <li><a href="/basededatos">Base de Datos</a></li>
-                <li><a href="/cliente">por Cliente</a></li>
-                <li><a href="/producto">por Producto</a></li>
-                <li><a href="/cantidad">por Cantidad</a></li>
-                <li><a href="/precio">por Precio</a></li>                
+                <li><a href="/cliente">Busqueda por Cliente</a></li>
+                <li><a href="/producto">Busqueda por Producto</a></li>
+                <li><a href="/cantidad">Busqueda por Cantidad</a></li>
+                <li><a href="/precio">Busqueda por Precio</a></li>                
                 <li><a href="/signoff">Desloguear</a></li>                
             </ul>
         </div>
