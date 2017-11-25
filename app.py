@@ -16,6 +16,7 @@ moment = Moment(app)
 
 app.config['SECRET_KEY'] = 'un string que funcione como llave'
 
+
 #Creacion de una lista en donde se guadaran los datos de log de usuario.
 #Se encapsulan los posibles errores que puede suceden al no encontrar los archivos csv.
 users_check = []
@@ -60,7 +61,7 @@ def login():
                             #El return renderiza en index.html con la sesion iniciada (poder ver el menu).
                             return render_template('index.html', username=session.get('usuarioLoggeado'))
                 except IndexError:
-                    return 'usuario de usuariosbase.csv invalido'        
+                    return 'usuario de usuariosbase.csv invalido'
         except FileNotFoundError:
             return 'No se encuentra el archivo de usuariosbase'
     return render_template('login.html', form=fomu_log, username=session.get('usuarioLoggeado'))
@@ -71,8 +72,8 @@ def bdatos():
     if 'usuarioLoggeado' in session:
         try:
             with open('bdatos.csv', 'r') as archivo:
-                datalines = csv.reader(archivo)                
-                titulos = next(datalines)                                
+                datalines = csv.reader(archivo)
+                titulos = next(datalines)
                 return render_template('tabla.html', cabeza=titulos, cuerpo=datalines, username=session.get('usuarioLoggeado'))
         except FileNotFoundError:
             return 'No se encuentra la base de datos de PharmaDino'
@@ -83,18 +84,21 @@ def bdatos():
 #En todos ellos siempre se retorna el tabla.html para conformar la respuesta visual.
 @app.route('/cliente', methods=['GET', 'POST'])
 def consulcliente():
-    if 'usuarioLoggeado' in session:        
-        form_nombre = SearchCliente()    
+    if 'usuarioLoggeado' in session:
+        form_nombre = SearchCliente()
         try:
             with open('bdatos.csv') as archivo:
                 pass
         except FileNotFoundError:
-            return 'cvs de base de datos inexistente'    
-        if form_nombre.validate_on_submit():            
+            return 'cvs de base de datos inexistente'
+        if form_nombre.validate_on_submit():
             with open('bdatos.csv') as archivo:
                 try:
                     filecsv = csv.reader(archivo)
                     infos=[]
+                    #Lista para guardar los resultados que seran descargados
+                    infosAguardar=[]
+                    infosAguardar.append(["Estos son los resultados sobre la busqueda de: " + form_nombre.parametro.data])
                     for linea in filecsv:
                         ubicacion = linea
                         codigo = ubicacion[0]
@@ -106,23 +110,24 @@ def consulcliente():
                         if form_nombre.parametro.data.lower() in cliente.lower():
                             info = [ubicacion[0],ubicacion[1],ubicacion[2],ubicacion[3],ubicacion[4]]
                             infos.append(info)
+                            infosAguardar.append(info)
                     #Este if se adiciono para informar que no se encuentran resultados.
                     if len(infos) == 0 :
                         flash('El cliente que busca no se encuentra en nuestra Base de Datos.')
                         return render_template('cliente.html', form=form_nombre, username=session.get('usuarioLoggeado'))
                     with open('consulta.csv', 'w',newline='') as archivo:
                         a = csv.writer(archivo)
-                        a.writerows(infos)
+                        a.writerows(infosAguardar)
                     return render_template('tabla.html', form=form_nombre, cabeza=tupla, cuerpo=infos, username=session.get('usuarioLoggeado'))
                 except IndexError:
-                    return 'Numero invalido de datos a corroborar.'           
+                    return 'Numero invalido de datos a corroborar.'
         return render_template('cliente.html', form=form_nombre, username=session.get('usuarioLoggeado'))
     return render_template('sign_off.html')
 
 #Consulta de producto.
 @app.route('/producto', methods=['GET', 'POST'])
 def consulproducto():
-    if 'usuarioLoggeado' in session:        
+    if 'usuarioLoggeado' in session:
         form_producto = SearchProd()
         try:
             with open('bdatos.csv') as archivo:
@@ -134,6 +139,9 @@ def consulproducto():
                 try:
                     filecsv = csv.reader(archivo)
                     infos=[]
+                    #Lista para guardar los resultados que seran descargados
+                    infosAguardar=[]
+                    infosAguardar.append(["Estos son los resultados sobre la busqueda de: " + form_producto.parametro.data])
                     for linea in filecsv:
                         ubicacion = linea
                         codigo = ubicacion[0]
@@ -144,17 +152,18 @@ def consulproducto():
                         # Este Array guarda las infos que coincide el cliente
                         if form_producto.parametro.data.lower() in producto.lower():
                             info = [ubicacion[0],ubicacion[1],ubicacion[2],ubicacion[3],ubicacion[4]]
-                            infos.append(info) 
+                            infos.append(info)
+                            infosAguardar.append(info)
                     #Este if se adiciono para informar que no se encuentran resultados.
                     if len(infos) == 0 :
                         flash('El Producto que busca no se encuentra en nuestra Base de Datos.')
                         return render_template('producto.html', form=form_producto, username=session.get('usuarioLoggeado'))
                     with open('consulta.csv', 'w',newline='') as archivo:
                         a = csv.writer(archivo)
-                        a.writerows(infos)
+                        a.writerows(infosAguardar)
                     return render_template('tabla.html', form=form_producto, cabeza=tupla, cuerpo=infos, username=session.get('usuarioLoggeado'))
                 except IndexError:
-                    return 'Error al buscar informacion del producto'                           
+                    return 'Error al buscar informacion del producto'
         return render_template('producto.html', form=form_producto, username=session.get('usuarioLoggeado'))
     return render_template('sign_off.html')
 
@@ -174,27 +183,31 @@ def consulcantidad():
                 try:
                     filecsv = csv.reader(archivo)
                     infos=[]
+                    #Lista para guardar los resultados que seran descargados
+                    infosAguardar=[]
+                    infosAguardar.append(["Estos son los resultados sobre la busqueda de: " + form_cantidad.parametro.data])
                     for linea in filecsv:
                         ubicacion = linea
                         codigo = ubicacion[0]
-                        cantidad = ubicacion[3]                        
+                        cantidad = ubicacion[3]
                         # El Array tupla, tiene los titulos del encabezado
                         if "CODIGO" == codigo:
                             tupla = [ubicacion[0],ubicacion[1],ubicacion[2],ubicacion[3],ubicacion[4]]
                         # Este Array guarda las infos que coincide el cliente
                         if form_cantidad.parametro.data == cantidad:
                             info = [ubicacion[0],ubicacion[1],ubicacion[2],ubicacion[3],ubicacion[4]]
-                            infos.append(info)                            
+                            infos.append(info)
+                            infosAguardar.append(info)
                     #Este if se adiciono para informar que no se encuentran resultados.
                     if len(infos) == 0 :
                         flash('La cantidad ingresada  es inexistente en nuestra base de datos.')
                         return render_template('cantidad.html', form=form_cantidad, username=session.get('usuarioLoggeado'))
                     with open('consulta.csv', 'w',newline='') as archivo:
                         a = csv.writer(archivo)
-                        a.writerows(infos)
+                        a.writerows(infosAguardar)
                     return render_template('tabla.html', form=form_cantidad, cabeza=tupla, cuerpo=infos, username=session.get('usuarioLoggeado'))
                 except IndexError:
-                    return 'Error al encontrar los usuarios y cantidad'                           
+                    return 'Error al encontrar los usuarios y cantidad'
         return render_template('cantidad.html', form=form_cantidad, username=session.get('usuarioLoggeado'))
     return render_template('sign_off.html')
 
@@ -214,27 +227,31 @@ def consulprecio():
                 try:
                     filecsv = csv.reader(archivo)
                     infos=[]
+                    #Lista para guardar los resultados que seran descargados
+                    infosAguardar=[]
+                    infosAguardar.append(["Estos son los resultados sobre la busqueda de: " + form_precio.parametro.data])
                     for linea in filecsv:
                         ubicacion = linea
                         codigo = ubicacion[0]
-                        precio = ubicacion[4]                        
+                        precio = ubicacion[4]
                         # El Array tupla, tiene los titulos del encabezado
                         if "CODIGO" == codigo:
                             tupla = [ubicacion[0],ubicacion[1],ubicacion[2],ubicacion[3],ubicacion[4]]
                         # Este Array guarda las infos que coincide el cliente
                         if form_precio.parametro.data == precio:
                             info = [ubicacion[0],ubicacion[1],ubicacion[2],ubicacion[3],ubicacion[4]]
-                            infos.append(info)                           
+                            infos.append(info)
+                            infosAguardar.append(info)
                     #Este if se adiciono para informar que no se encuentran resultados.
                     if len(infos) == 0 :
                         flash('El Precio que busca no se encuentra en nuestra Base de Datos.')
                         return render_template('precio.html', form=form_precio, username=session.get('usuarioLoggeado'))
                     with open('consulta.csv', 'w',newline='') as archivo:
                         a = csv.writer(archivo)
-                        a.writerows(infos)
+                        a.writerows(infosAguardar)
                     return render_template('tabla.html', form=form_precio, cabeza=tupla, cuerpo=infos, username=session.get('usuarioLoggeado'))
                 except IndexError:
-                    return 'Error al buscar el usuario y su precio'                           
+                    return 'Error al buscar el usuario y su precio'
         return render_template('precio.html', form=form_precio, username=session.get('usuarioLoggeado'))
     return render_template('sign_off.html')
 
@@ -242,15 +259,11 @@ def consulprecio():
 #Descargas de consultas
 @app.route('/descargas/consulta', methods=['GET', 'POST'])
 def descargaPrecio():
-    with open('consulta.csv' , 'r+') as archivo:
-        resultados = archivo.read()
-        archivo.seek(0)
-        import time
-        ts = time.time()
-        import datetime
-        st = datetime.datetime.fromtimestamp(ts).strftime('%Y-%m-%d %H:%M:%S')
-        nombrearchivo = "consulta" + "-" + st + ".csv"
-        archivo.write("Consulta Descargada: \n" + resultados)
+    import time
+    ts = time.time()
+    import datetime
+    st = datetime.datetime.fromtimestamp(ts).strftime('%Y-%m-%d %H:%M:%S')
+    nombrearchivo = "consulta" + "-" + st + ".csv"
     return send_file('consulta.csv', as_attachment=True ,attachment_filename=nombrearchivo )
 
 #funcion de registro con if para validacion de contraseñas.
