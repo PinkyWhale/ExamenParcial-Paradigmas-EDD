@@ -110,6 +110,9 @@ def consulcliente():
                     if len(infos) == 0 :
                         flash('El cliente que busca no se encuentra en nuestra Base de Datos.')
                         return render_template('cliente.html', form=form_nombre, username=session.get('usuarioLoggeado'))
+                    with open('consulta.csv', 'w',newline='') as archivo:
+                        a = csv.writer(archivo)
+                        a.writerows(infos)
                     return render_template('tabla.html', form=form_nombre, cabeza=tupla, cuerpo=infos, username=session.get('usuarioLoggeado'))
                 except IndexError:
                     return 'Numero invalido de datos a corroborar.'           
@@ -146,6 +149,9 @@ def consulproducto():
                     if len(infos) == 0 :
                         flash('El Producto que busca no se encuentra en nuestra Base de Datos.')
                         return render_template('producto.html', form=form_producto, username=session.get('usuarioLoggeado'))
+                    with open('consulta.csv', 'w',newline='') as archivo:
+                        a = csv.writer(archivo)
+                        a.writerows(infos)
                     return render_template('tabla.html', form=form_producto, cabeza=tupla, cuerpo=infos, username=session.get('usuarioLoggeado'))
                 except IndexError:
                     return 'Error al buscar informacion del producto'                           
@@ -183,6 +189,9 @@ def consulcantidad():
                     if len(infos) == 0 :
                         flash('La cantidad ingresada  es inexistente en nuestra base de datos.')
                         return render_template('cantidad.html', form=form_cantidad, username=session.get('usuarioLoggeado'))
+                    with open('consulta.csv', 'w',newline='') as archivo:
+                        a = csv.writer(archivo)
+                        a.writerows(infos)
                     return render_template('tabla.html', form=form_cantidad, cabeza=tupla, cuerpo=infos, username=session.get('usuarioLoggeado'))
                 except IndexError:
                     return 'Error al encontrar los usuarios y cantidad'                           
@@ -220,8 +229,9 @@ def consulprecio():
                     if len(infos) == 0 :
                         flash('El Precio que busca no se encuentra en nuestra Base de Datos.')
                         return render_template('precio.html', form=form_precio, username=session.get('usuarioLoggeado'))
-                    with open('consulta.csv', 'w') as archivo:
-                        archivo.writelines(infos)
+                    with open('consulta.csv', 'w',newline='') as archivo:
+                        a = csv.writer(archivo)
+                        a.writerows(infos)
                     return render_template('tabla.html', form=form_precio, cabeza=tupla, cuerpo=infos, username=session.get('usuarioLoggeado'))
                 except IndexError:
                     return 'Error al buscar el usuario y su precio'                           
@@ -240,8 +250,8 @@ def descargaPrecio():
         import datetime
         st = datetime.datetime.fromtimestamp(ts).strftime('%Y-%m-%d %H:%M:%S')
         nombrearchivo = "consulta" + "-" + st + ".csv"
-        archivo.write("Consulta sobre los precios\n" + resultados)
-    return send_file('precios', as_attachment=True ,attachment_filename=tiempoarchivo(nombrearchivo ,'%Y%m%d%H%M%S-{fname}'))
+        archivo.write("Consulta Descargada: \n" + resultados)
+    return send_file('consulta.csv', as_attachment=True ,attachment_filename=nombrearchivo )
 
 #funcion de registro con if para validacion de contraseñas.
 @app.route('/register', methods=['GET', 'POST'])
