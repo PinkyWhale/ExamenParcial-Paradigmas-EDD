@@ -288,31 +288,36 @@ def register():
 #Nuevo app.route para cambiar la contraseña.
 @app.route('/changepass', methods=['GET', 'POST'])
 def changepass():
-    form_cambiarpass = NuevaPass()
-    if form_cambiarpass.validate_on_submit():
-        try:
-            with open('usuariosbase.csv') as archivo:
-                filecsv = csv.reader(archivo)
-                contenidoNuevo = []
-                usernameActual = session.get('usuarioLoggeado')                
-                for linea in filecsv:
-                    columnas = linea
-                    nombre = columnas[0]                    
-                    if session.get('usuarioLoggeado') == nombre:
-                        if form_cambiarpass.viejacontrase.data != columnas[1]:
-                            return render_template('changepass.html', malpassword="true", form=form_cambiarpass, username=session.get('usuarioLoggeado'))
-                        else:
-                            columnas[1] = form_cambiarpass.nuevacontrase.data                        
-                    info = ','.join(columnas)+ '\n'
-                    contenidoNuevo.append(info)            
-            with open('usuariosbase.csv', 'w') as archivo:
-                archivo.writelines(contenidoNuevo)
-                #El return renderiza en changepass.html confirmando el exito de la operacion
-                return render_template('changepass.html', cambio="true", form=form_cambiarpass, username=session.get('usuarioLoggeado'))
-        except IndexError:
-            return 'Ocurrio un error en el cambio de contraseña'
-    return render_template('changepass.html', form=form_cambiarpass, username=session.get('usuarioLoggeado'))
+    if 'usuarioLoggeado' in session:
+        form_cambiarpass = NuevaPass()
+        if form_cambiarpass.validate_on_submit():
+            try:
+                with open('usuariosbase.csv') as archivo:
+                    filecsv = csv.reader(archivo)
+                    contenidoNuevo = []
+                    usernameActual = session.get('usuarioLoggeado')                
+                    for linea in filecsv:
+                        columnas = linea
+                        nombre = columnas[0]                    
+                        if session.get('usuarioLoggeado') == nombre:
+                            if form_cambiarpass.viejacontrase.data != columnas[1]:
+                                return render_template('changepass.html', malpassword="true", form=form_cambiarpass, username=session.get('usuarioLoggeado'))
+                            else:
+                                columnas[1] = form_cambiarpass.nuevacontrase.data                        
+                        info = ','.join(columnas)+ '\n'
+                        contenidoNuevo.append(info)            
+                with open('usuariosbase.csv', 'w') as archivo:
+                    archivo.writelines(contenidoNuevo)
+                    #El return renderiza en changepass.html confirmando el exito de la operacion
+                    return render_template('changepass.html', cambio="true", form=form_cambiarpass, username=session.get('usuarioLoggeado'))
+            except IndexError:
+                return 'Ocurrio un error en el cambio de contraseña'
+        return render_template('changepass.html', form=form_cambiarpass, username=session.get('usuarioLoggeado'))
+    return render_template('sign_off.html')
 
+
+
+    
 
 @app.route('/signoff', methods=['GET', 'POST'])
 def signoff():
