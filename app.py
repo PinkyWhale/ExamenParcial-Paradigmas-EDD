@@ -1,8 +1,9 @@
 #!/usr/bin/env python
 import csv
 import sys
-from flask import Flask, render_template, request, redirect, url_for, flash, session
-from formularios import SearchCliente,SearchProd,SearchCant,SearchPrecio, Checkeo_Log,CreaUsuario
+from flask import Flask, render_template, request, redirect, url_for, flash, session, send_file
+from datetime import datetime
+from formularios import SearchCliente,SearchProd,SearchCant,SearchPrecio, Checkeo_Log,CreaUsuario, NuevaPass
 from flask_bootstrap import Bootstrap
 from flask_moment import Moment
 from flask_script import Manager
@@ -219,11 +220,28 @@ def consulprecio():
                     if len(infos) == 0 :
                         flash('El Precio que busca no se encuentra en nuestra Base de Datos.')
                         return render_template('precio.html', form=form_precio, username=session.get('usuarioLoggeado'))
+                    with open('consulta.csv', 'w') as archivo:
+                        archivo.writelines(infos)
                     return render_template('tabla.html', form=form_precio, cabeza=tupla, cuerpo=infos, username=session.get('usuarioLoggeado'))
                 except IndexError:
                     return 'Error al buscar el usuario y su precio'                           
         return render_template('precio.html', form=form_precio, username=session.get('usuarioLoggeado'))
     return render_template('sign_off.html')
+
+
+#Descargas de consultas
+@app.route('/descargas/consulta', methods=['GET', 'POST'])
+def descargaPrecio():
+    with open('consulta.csv' , 'r+') as archivo:
+        resultados = archivo.read()
+        archivo.seek(0)
+        import time
+        ts = time.time()
+        import datetime
+        st = datetime.datetime.fromtimestamp(ts).strftime('%Y-%m-%d %H:%M:%S')
+        nombrearchivo = "consulta" + "-" + st + ".csv"
+        archivo.write("Consulta sobre los precios\n" + resultados)
+    return send_file('precios', as_attachment=True ,attachment_filename=tiempoarchivo(nombrearchivo ,'%Y%m%d%H%M%S-{fname}'))
 
 #funcion de registro con if para validacion de contraseñas.
 @app.route('/register', methods=['GET', 'POST'])
@@ -244,6 +262,35 @@ def register():
         return "Revise la contraseña"
     return render_template('register.html', form=form_registro)
 
+#Nuevo app.route para cambiar la contraseña.
+@app.route('/changepass', methods=['GET', 'POST'])
+def changepass():
+    form_cambiarpass = NuevaPass()
+    if form_cambiarpass.validate_on_submit():
+        try:
+            with open('usuariosbase.csv') as archivo:
+                filecsv = csv.reader(archivo)
+                contenidoNuevo = []
+                usernameActual = session.get('usuarioLoggeado')                
+                for linea in filecsv:
+                    columnas = linea
+                    nombre = columnas[0]                    
+                    if session.get('usuarioLoggeado') == nombre:
+                        if form_cambiarpass.viejacontrase.data != columnas[1]:
+                            return render_template('changepass.html', malpassword="true", form=form_cambiarpass, username=session.get('usuarioLoggeado'))
+                        else:
+                            columnas[1] = form_cambiarpass.nuevacontrase.data                        
+                    info = ','.join(columnas)+ '\n'
+                    contenidoNuevo.append(info)            
+            with open('usuariosbase.csv', 'w') as archivo:
+                archivo.writelines(contenidoNuevo)
+                #El return renderiza en changepass.html confirmando el exito de la operacion
+                return render_template('changepass.html', cambio="true", form=form_cambiarpass, username=session.get('usuarioLoggeado'))
+        except IndexError:
+            return 'Ocurrio un error en el cambio de contraseña'
+    return render_template('changepass.html', form=form_cambiarpass, username=session.get('usuarioLoggeado'))
+
+
 @app.route('/signoff', methods=['GET', 'POST'])
 def signoff():
     session.pop('usuarioLoggeado', None)
@@ -253,7 +300,6 @@ def signoff():
 @app.errorhandler(404)
 def paginanotf(e):
     return render_template('404.html', username=session.get('usuarioLoggeado')), 404
-
 
 #Se agrego el , username=session.get('usuarioLoggeado') para validar la navbar.
 @app.errorhandler(500)

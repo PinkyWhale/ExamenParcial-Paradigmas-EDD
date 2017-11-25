@@ -6,12 +6,11 @@ PharmaDino
 INTRODUCCIÓN:
 -------------
 
-El presente es un sistema destinado a poder visualizar la base de datos de la empresa **“PharmaDino”**. En la cual se podrá realizar consultas como: Buscar Clientes por nombres, Buscar Productos por su nombre, Buscar la Cantidad de Stock que se compro y Precios por unidad. A su vez, la el acceso a este sistema está limitado a un proceso de registración y loggeo.
-
+El presente es un sistema destinado a poder visualizar la base de datos de la empresa **“PharmaDino”**. En la cual se podrá realizar consultas de Clientes, Stock, Cantidad y Precios por unidad. A su vez, la el acceso a este sistema está limitado a un proceso de registración y loggeo.
 
 FLUJO DEL PROGRAMA:
 -------------------
-En primera instancia el programa cuando el usuario esta "logeado" da una visualización principal de las noticias de la organización, en este caso son descuentos a afiliados/obras sociales. En el menú en el estado de "no logeado" podremos visualizar las solapas “Bienvenido” , “Login” y “Registrarse”. Una vez ingresado al sistema (mediante el LOGIN) este menú principal se desplegará y dejara ver lo siguiente: Base de Datos, Busqueda por Cliente, Busqueda por Producto, Busqueda por Cantidad y Busqueda por Precio. Cada una de estas secciones permitirá realizar las correspondientes consultas, que son: Filtrar por nombre de cliente, filtrar por nombre del producto, filtrar por precio o filtrar por cantidad de stock comprado.
+En primera instancia el programa da una visualización principal de las noticias de la organización, en este caso son descuentos a afiliados/obras sociales. En el menú podremos visualizar las solapas “Bienvenido” , “Login” y “Registrarse”. Una vez ingresado al sistema este menú principal se desplegará y dejara ver lo siguiente: Base de Datos, por Cliente, por Producto, por Cantidad, por Precio. Cada una de estas secciones permitirá realizar las correspondientes consultas
 
 ESTRUCTURA:
 -----------
@@ -26,10 +25,10 @@ UTILIZACION EL PROGRAMA:
 ------------------------
 El operador deberá validar la credencial de identidad para acceder a la informacion a la base de datos. Si el mismo no posee usuario de ingreso, podrá adquirir uno mediante el registro. Esto podrá realizarlo en el menu “Registrarse” que se encuentra en la parte superior del sistema. Una vez validado su ingreso (esto sera en el menu “Login”) podrá acceder a la Base de datos y a los sectores de consulta. Los sectores visibles a partir de su validacion de ingreso son:
 + **Base de Datos:** En donde se encuentra la información. Esta está representada mediante una tabla.
-+ **Busqueda por Cliente:** Aca se podra hacer la filtracion de informacion en base al nombre del cliente.
-+ **Busqueda por Producto:** La filtración se realizará en base al nombre del producto.
-+ **Busqueda por Cantidad:** Se lista por la cantidad de productos comprados.
-+ **Busqueda por Precio:** Se listará la información según el precio a buscar.
++ **por Cliente:** Aca se podra hacer la filtracion de informacion en base al nombre del cliente.
++ **por Producto:** La filtración se realizará en base al nombre del producto.
++ **por Cantidad:** Se lista por la cantidad de productos comprados.
++ **por Precio:** Se listará la información según el precio a buscar.
 + **Desloguear:** Este botón realizará del LogOut del usuario de forma inmediata.
 Si los campos ingresados a la hora de realizar las filtraciones/consultas son inválidos, se mostrará un pequeño mensaje en rojo. Anunciando cuáles son los requerimientos mínimos para poder obtener un resultado efectivo.
 

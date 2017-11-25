@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+{% block title %}Nueva Contraseña{% endblock %}
+{% block page_content %}
+<form method="POST" action="/changepass">
+    <table cellspacing="10">
+        <tr>
+            <td>{{ form.csrf_token }}
+                {{ form.viejacontrase.label }} </td><td>&nbsp;</td><td> {{ form.viejacontrase(size=20) }} </td>
+	   </tr>
+    
+        <tr>{{ form.csrf_token }}
+            <td>{{ form.nuevacontrase.label }} </td><td>&nbsp;</td><td> {{ form.nuevacontrase(size=20) }} </td>
+	   </tr>
+    
+        <tr>{{ form.csrf_token }}
+            <td>{{ form.repcontrase.label }} </td><td>&nbsp;</td><td> {{ form.repcontrase(size=20) }} </td>
+	   </tr>
+    </table>
+
+    {% if form.errors %}
+    
+    <ul class="errors" style="color: red;" >
+        {% for error in form.viejacontrase.errors %}
+          <li>{{ error }}</li>
+        {% endfor %}
+        {% for error in form.nuevacontrase.errors %}
+          <li>{{ error }}</li>
+        {% endfor %}
+        {% for error in form.repcontrase.errors %}
+          <li>{{ error }}</li>
+        {% endfor %}
+    </ul>
+    
+    {% endif %}
+
+    {% if malpassword %}
+    <ul class="errors" style="color: red;" >
+        <li style="color: red;">La contraseña actual no coincide</li>
+    </ul>
+    {% endif %}
+
+    {% if cambio %}
+    <ul>
+        <li style="color: green; size: 16px;">La contraseña se cambio correctamente</li>
+    </ul>
+    {% endif %}
+    <input type="submit" value="Enviar">
+</form>
+{% endblock %}

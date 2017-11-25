@@ -28,3 +28,9 @@ class CreaUsuario(FlaskForm):
     name = StringField('Usuario:', validators=[DataRequired(message="Debe escribir un nombre de usuario")])
     pass1 = PasswordField('Contraseña:', validators=[DataRequired(message="Debe escribir una contraseña")])
     pass2 = PasswordField('Repita Contraseña:', validators=[DataRequired(message="Debe escribir de nuevo su contraseña"),EqualTo('pass1', message='Las contraseñas deben coincidir')])
+
+#Formulario para cambiar password
+class NuevaPass(FlaskForm):
+	viejacontrase = PasswordField('Contraseña antigua:', validators=[DataRequired(message="Debe escribir la contraseña antigua")])
+	nuevacontrase= PasswordField ('Contraseña nueva:', validators=[DataRequired(message="Debe escribir una contraseña")])
+	repcontrase = PasswordField('Repita Contraseña:', validators=[DataRequired(message="Debe escribir de nuevo su contraseña"),EqualTo('nuevacontrase', message='Las contraseñas deben coincidir')])
